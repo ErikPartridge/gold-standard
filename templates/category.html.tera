@@ -1,0 +1,6 @@
+{% extends "base" %}
+
+{% block content %}
+<h1 class="title has-text-centered is-1">Learning about {{title}}</h1>
+<hr>
+{% endblock content %}

@@ -1,0 +1,11 @@
+{% extends "base" %}
+
+{% block content %}
+<h1 class="title is-1">About</h1>
+<p>Hey! I'm Erik, and I created this site. By day, I'm a data scientist. By night, I build fun web apps using an assortment of languages (this one's in Rust!)</p>
+<br><h3 class="title is-3">About the app</h3>
+<p>This section is for those of us who <a href="/learn/web%20development/">learn/web development</a>. I built this app using Rust, as an opportunity to get to know the language better. The backend is <a href="https://www.rocket.rs">Rocket-based</a>.</p>
+<br><h3 class="title is-3">About privacy</h3>
+<p>I care about your privacy—I really do. I don't use cookies. In terms of analytics, the only thing I do at the moment is log that someone requested the page, the country, browser language, and if mobile or not. I do this server side. I store your IP address temporarily for rate limiting. However, these are periodically cleared and done only in memory unless you're actively scraping.</p>
+<br>
+{% endblock content %}

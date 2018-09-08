@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Fundamentals of Anything</title>
+  <meta name="referrer" content="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css"  crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" href="/cdn/main.css">
+  <link rel="icon" rel="mask-icon" href="/cdn/favicon.svg">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-burger burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="/">
+          Index
+        </a>
+        <a class="navbar-item" href="/about">
+          About
+        </a>
+        <a class="navbar-item" href="/submission">
+          Submit
+        </a>
+      </div>
+    </div>
+    </nav>
+    <div id="content" class="container">{% block content %}{% endblock content %}</div>
+    <div id="footer" class="footer has-text-centered">
+        {% block footer %}
+        &copy; Copyright 2018, <a href="https://www.erikpartridge.com/">Erik Partridge</a> &bull; Made with ❤️ in 🇨🇦
+        {% endblock footer %}
+    </div>
+</body>
+</html>

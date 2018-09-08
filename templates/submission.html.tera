@@ -1,0 +1,75 @@
+{% extends "base" %}
+
+{% block content %}
+<h3 class="title is-3">Submit Your Recommendation</h3>
+<hr>
+<p>Thanks for sharing your knowledge with the world :) There's a few things I need you to agree to, in order for me to share your knowledge with humans everywhere.</p>
+<br>
+<p>In order for your knowledge to go up on the site, you agree to grant me, Erik Partridge, an irrevocable right to publish the information you submit via this form, modified or unmodified, in whole or in part. You give me the right to use this information for commercial purposes. You grant me the right to publish biographical details about you, the author, to prove that you are knowledgeable on the topic. You furthmore give me the right to transfer this information and these rights on to another entity, if needed to keep this site functional and free. You warrant that you hold the copyright and right to transfer the copyright of any summaries or biography or other information that you submit here today, and that you shall incur any legal costs required to protect me from any potential copyright infringement related to your submission.</p>
+<br>
+<p>In return, I promise to you that any information of yours that I publish, I will make available without cost to the general public, subject to certain reasonable restrictions (rate limiting, etc). Note that cost shall be considered to be the exchange of money from user to me, as opposed to the exchange of data. I will also, if requested at this time, attribute you if your content is used, and note if it is modified.</p>
+<br>
+<p>Thanks again :)</p>
+<br>
+<div class="submission-form">
+  <h5 class="title is-5">Form</h5>
+  <form class="form" action="/submission" method="POST">
+    <div class="field">
+      <label class="label">What's your name?</label>
+      <div class="control">
+        <input class="input" name="name" type="text" placeholder="e.g Alex Smith">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Where can I email you for follow up?</label>
+      <div class="control">
+        <input class="input" name="email" type="email" placeholder="e.g. alexsmith@gmail.com">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Bio: Why should I believe you?</label>
+      <div class="control">
+        <textarea class="textarea" name="bio" placeholder="Well, I teach COMP 204 at XX University."></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">What are you recommending?</label>
+      <div class="control">
+        <input class="input" name="title" type="text" placeholder="The King James Bible">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Where can I find it?</label>
+      <div class="control">
+        <input class="input" name="reference" type="text" placeholder="ISBN 978-000000000 or https://www.amazon.ca/King-James-Bible-400th-Anniversary/dp/0199557608">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Who wrote / created it?</label>
+      <div class="control">
+        <input class="input" name="author" type="text" placeholder="eg. Stephen Hawking">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">What field(s) does this apply to?</label>
+      <div class="control">
+        <input class="input" name="category" type="text" placeholder="History: Modern, History: American">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Your message: the why?</label>
+      <div class="control">
+        <textarea class="textarea" name="message" placeholder="Why is this one of those exceptional works? Did it define the field, is it a newcomer? The best intro in the world on the subject?"></textarea>
+      </div>
+    </div>
+    <button class="button is-dark" type="submit">Submit</button>
+  </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,26 @@
+* {
+  font-family: monospace;
+}
+
+.button {
+  font-family: monospace !important;
+}
+
+input {
+  font-family: monospace;
+}
+
+textarea {
+  font-family: monospace;
+}
+
+.container {
+  margin-top: 3%;
+}
+#top-container {
+  line-height: 1.5;
+}
+
+.navbar-item {
+  font-family: monospace;
+}

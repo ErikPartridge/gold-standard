@@ -1,0 +1,26 @@
+{% extends "base" %}
+
+{% block content %}
+<h1 class="title has-text-centered is-1">I want to learn...</h1>
+<div class="columns is-centered">
+  <div>
+    <form action="/learn" method="POST">
+      <div class="field has-addons">
+        <div class="control has-icons-left">
+          <input pattern=".{3,}" required title="3 characters minimum please (or just select an autocompleted)" name="category" class="input is-large" type="text" placeholder="Cooking">
+          <span class="icon is-small is-left">
+            <i class="fas fa-search fa-xs"></i>
+          </span>
+        </div>
+        <div class="control">
+          <button type="submit" class="button is-large is-dark">
+            Search
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<hr>
+<p>Welcome to The Fundamentals of Anything! We don't quite have everything, but gosh darnit if we aren't trying hard to get there. We're predominantly community based: you can help us by <a href="/submission">sharing your knowledge</a>.</p>
+{% endblock content %}
