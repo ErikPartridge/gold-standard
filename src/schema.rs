@@ -23,6 +23,7 @@ table! {
         isbn -> Nullable<Varchar>,
         year_of_creation -> Varchar,
         slug -> Varchar,
+        citation -> Text,
         flags -> Array<Text>,
         field_id -> Nullable<Int4>,
         created_at -> Date,
@@ -49,4 +50,8 @@ table! {
 
 joinable!(products -> fields (field_id));
 
-allow_tables_to_appear_in_same_query!(fields, products, submissions,);
+allow_tables_to_appear_in_same_query!(
+    fields,
+    products,
+    submissions,
+);

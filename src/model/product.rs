@@ -26,6 +26,7 @@ pub struct Product {
     pub isbn: Option<String>,
     pub year_of_creation: String,
     pub slug: String,
+    pub citation: String,
     pub flags: Vec<String>,
     pub field_id: Option<i32>,
     pub created_at: NaiveDate,
@@ -47,6 +48,7 @@ pub struct NewProduct {
     pub isbn: Option<String>,
     pub year_of_creation: String,
     pub slug: String,
+    pub citation: String,
     pub flags: Vec<String>,
     pub field_id: Option<i32>,
 }
