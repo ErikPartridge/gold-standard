@@ -14,6 +14,7 @@ CREATE TABLE products (
   isbn VARCHAR(13),
   year_of_creation VARCHAR(4) NOT NULL,
   slug VARCHAR(255) NOT NULL,
+  citation TEXT NOT NULL,
   flags TEXT[] NOT NULL,
   field_id INTEGER REFERENCES fields(id),
   created_at DATE NOT NULL default now(),

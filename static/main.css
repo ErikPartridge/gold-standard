@@ -24,3 +24,46 @@ textarea {
 .navbar-item {
   font-family: monospace;
 }
+
+@media only screen and (max-width: 1024px) {
+  .container {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .navbar-menu {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  .navbar-item {
+    display: flex;
+  }
+  .navbar,
+  .navbar-menu,
+  .navbar-start,
+  .navbar-end {
+    align-items: stretch;
+    display: flex;
+    padding: 0;
+  }
+  
+  .navbar-menu{
+    flex-grow: 1;
+    flex-shrink: 0;
+  }
+  .navbar-start{
+    justify-content: flex-start;
+    margin-right: auto;
+  }
+  .navbar-end{
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+  .navbar .container {
+    display: flex;
+  }
+  .navbar-item {
+    display: flex;
+    align-items: center;
+  }  
+}

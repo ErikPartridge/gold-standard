@@ -1,11 +1,12 @@
+#![allow(proc_macro_derive_resolution_fallback)]
 extern crate chrono;
 extern crate serde;
 use chrono::{NaiveDate, Utc};
 use schema::*;
 extern crate diesel;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use diesel::RunQueryDsl;
 use routes::DbConn;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Queryable, Debug, AsChangeset, Clone, Serialize, Deserialize)]
 pub struct Submission {
@@ -36,24 +37,28 @@ pub struct NewSubmission {
     pub category: String,
     pub message: String,
     pub created_at: chrono::NaiveDate,
-    pub updated_at: chrono::NaiveDate
+    pub updated_at: chrono::NaiveDate,
 }
 
-
 impl Submission {
-    fn save(&self, conn: DbConn) -> Option<Submission> {
+    /*fn save(&self, conn: DbConn) -> Option<Submission> {
         let date = Utc::now().naive_utc().date();
-        let updated = Submission{updated_at: date, .. self.clone()};
-        let res = diesel::update(submissions::table).set(&updated).get_result::<Submission>(&*conn);
+        let updated = Submission {
+            updated_at: date,
+            ..self.clone()
+        };
+        let res = diesel::update(submissions::table)
+            .set(&updated)
+            .get_result::<Submission>(&*conn);
         match res {
             Ok(x) => return Some(x),
-            _ => return None
+            _ => return None,
         }
-    }
+    }*/
 }
 
 impl NewSubmission {
-    pub fn save(&self, conn : DbConn) -> Option<Submission> {
+    pub fn save(&self, conn: DbConn) -> Option<Submission> {
         let res = diesel::insert_into(submissions::dsl::submissions)
             .values(self)
             .get_result::<Submission>(&*conn);

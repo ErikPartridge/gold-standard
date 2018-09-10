@@ -7,7 +7,7 @@
     <form action="/learn" method="POST">
       <div class="field has-addons">
         <div class="control has-icons-left">
-          <input pattern=".{3,}" required title="3 characters minimum please (or just select an autocompleted)" name="category" class="input is-large" type="text" placeholder="Cooking">
+          <input pattern=".{3,}" required title="3 characters minimum please (or just select an autocompleted)" name="field" class="input is-large" type="text" placeholder="Cooking">
           <span class="icon is-small is-left">
             <i class="fas fa-search fa-xs"></i>
           </span>
@@ -22,5 +22,14 @@
   </div>
 </div>
 <hr>
-<p>Welcome to The Fundamentals of Anything! We don't quite have everything, but gosh darnit if we aren't trying hard to get there. We're predominantly community based: you can help us by <a href="/submission">sharing your knowledge</a>.</p>
+<h4 class="subtitle is-4">Welcome!</h4>
+<p>Welcome to The Fundamentals of Anything! There's not quite have everything, but gosh darnit if we aren't trying hard to get there. The site is predominantly community based: you can help us by <a href="/submission">sharing your knowledge</a>. Alternatively, join our mailing list-I need your help in vetting submissions! After all, we can't really claim it to be the fundamental based on a sole user's opinion.</p>
+<hr>
+<h4 class="subtitle is-4">Trending Subjects</h4>
+{% for subject in subjects %}
+  <p>- <a href="/learn/{{subject.name | urlencode}}">{{subject.name}}</a></p>
+{% endfor %}
+<br>
+<p>Have feedback on the site? I'd love to hear it. Please ping me anywhere on social media, via <a href="mailto:erik@erikpartridge.com">email</a> or as <a href="https://github.com/ErikPartridge/fundamentals">an issue on the GitHub Repository</a> for the web app.</p>
+<br>
 {% endblock content %}

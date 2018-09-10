@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1 class="title is-1">About</h1>
-<p>Hey! I'm Erik, and I created this site. By day, I'm a data scientist. By night, I build fun web apps using an assortment of languages (this one's in Rust!)</p>
+<p>Hey! I'm Erik, and I created this site. By day, I'm a data scientist. By night, I build fun web apps using an assortment of languages (this one's in Rust!). I made this web app, because I realized as much as there are tools to find great fiction books (<a href="https://goodreads.com">Good Reads</a> for example). This doesn't exist in non-fiction books, outside of biographies and cookbooks. For those of us that want to learn a subject, or hone our fundamentals in one of our passions, there's not a lot out there.</p>
 <br><h3 class="title is-3">About the app</h3>
 <p>This section is for those of us who <a href="/learn/web%20development/">learn/web development</a>. I built this app using Rust, as an opportunity to get to know the language better. The backend is <a href="https://www.rocket.rs">Rocket-based</a>.</p>
 <br><h3 class="title is-3">About privacy</h3>

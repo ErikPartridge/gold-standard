@@ -1,12 +1,11 @@
 use lettre::smtp::authentication::{Credentials, Mechanism};
 use lettre::{EmailTransport, SmtpTransport};
-use lettre_email::EmailBuilder;
 use lettre_email::Email;
+use lettre_email::EmailBuilder;
 
 use model::submission::Submission;
 
 pub trait Mailer {
-
     fn build(&self) -> EmailBuilder;
 
     fn send(&self) -> bool {
@@ -14,7 +13,7 @@ pub trait Mailer {
         let built: Email;
         match result {
             Ok(x) => built = x,
-            Err(err) => return false
+            Err(_) => return false,
         }
         let mut mailer = SmtpTransport::simple_builder(env!("SMTP_HOST"))
             .unwrap()
@@ -33,25 +32,28 @@ pub trait Mailer {
         let sent = mailer.send(&built);
         match sent {
             Ok(_) => return true,
-            _ => return false
+            _ => return false,
         }
     }
 }
 
 pub struct NewSubmissionEmail {
     pub identifier: String,
-    pub submission: Submission
+    pub submission: Submission,
 }
 
 impl Mailer for NewSubmissionEmail {
     fn build(&self) -> EmailBuilder {
         let subject = format!("Submission: # {}", self.identifier);
-        let contents = format!("Hey Erik,\n\n There's a new submission online:\n {:?}", self.submission);
+        let contents = format!(
+            "Hey Erik,\n\n There's a new submission online:\n {:?}",
+            self.submission
+        );
         let email = EmailBuilder::new()
-        .from("erik@erikpartridge.com")
-        .to(("erik@erikpartridge.com", "Erik Partridge"))
-        .subject(subject)
-        .body(contents);
+            .from("erik@erikpartridge.com")
+            .to(("erik@erikpartridge.com", "Erik Partridge"))
+            .subject(subject)
+            .body(contents);
         return email;
     }
 }

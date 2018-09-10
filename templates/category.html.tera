@@ -3,4 +3,26 @@
 {% block content %}
 <h1 class="title has-text-centered is-1">Learning about {{title}}</h1>
 <hr>
+{% for resource in resources %}
+<article class="media">
+  <div class="media-content">
+    <div class="content">
+      <p>
+        <a href="/item/{{resource.slug | urlencode}}"><strong>{{resource.name}}</strong></a>&nbsp;<small>{{resource.author}}</small></a>
+        </p>
+        <p>
+        {{resource.blurb | safe}}
+       </p>
+    </div>
+    <nav class="level is-mobile">
+      <div class="level-left">
+        {% for flag in resource.flags %}
+        <span class="level-item tag is-dark">{{flag}}</span>
+        {%endfor%}
+    </nav>
+  </div>
+</article>
+<hr>
+{% endfor %}
+<p>Think there should be more? <a href="/submission">Let me know!</a>. Disagree with any of the items on here? Please lodge your concerns on our mailing list.</a>
 {% endblock content %}

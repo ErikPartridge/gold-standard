@@ -3,4 +3,5 @@
 {% block content %}
 <h1 class="title is-1 has-text-centered">Thanks!</h1>
 <p>Thank you for your submission. I'll do my absolute darndest to get back to you in the next three days via email.</p>
+<p>Should you need to contact me in the meantime, please reach me at <a href="mailto:erik@erikpartridge.com">erik@erikpartridge.com</a></p>
 {% endblock content %}

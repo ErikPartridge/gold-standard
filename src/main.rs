@@ -10,6 +10,8 @@ extern crate rand;
 extern crate rocket;
 extern crate serde;
 extern crate tera;
+extern crate strsim;
+
 
 #[macro_use]
 extern crate diesel;
@@ -28,8 +30,8 @@ use rocket::http::Status;
 use rocket::request::{self, FromRequest};
 use rocket::{Outcome, Request, State};
 use std::ops::Deref;
-mod schema;
 mod mail;
+mod schema;
 
 // The URL to the database, set via the `DATABASE_URL` environment variable.
 static DATABASE_URL: &'static str = env!("DATABASE_URL");

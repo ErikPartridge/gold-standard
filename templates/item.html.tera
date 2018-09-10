@@ -3,12 +3,18 @@
 {% block content %}
 <h1 class="title has-text-centered is-1">{{product.name}}</h1>
 <h4 class="subtitle has-text-centered is-4">{{product.author}}</h4>
+<h6 class="subtitle has-text-centered is-6">You can get it on <a href="{{product.url}}">{{product.purchase_name}}</a></h6>
 <hr>
-<p class="has-text-centered"><i>Some links may return revenue to me to support the site. I do not screen items based on referral eligibility.</i></p>
+<p><b>Source of recommendation: </b> {{product.source | safe}}</p><br>
+<p><b>Reasoning: </b> {{product.reasoning | safe}}</p>
+<hr>
+<p><b>Description: </b> {{product.description | safe}}</p>
+<hr>
 {% if product.isbn %}
 <p><b>ISBN:</b> {{product.isbn}}</p>
 {% endif %}
-<p><b>URL:</b> <a href="{{product.url}}">Amazon</a></p>
-<p><b>Description: </b> {{product.description | safe}}</p>
-<p><b>Source of recommendation: </b> {{product.source | safe}}</p>
+<p><b>Citation: </b> Contributed by {{product.source}}. Components from Erik Partridge and @erikinapeartree</p>
+<hr>
+<p class="has-text-centered"><i>Disclaimer: Some links may return revenue to me to support the site. I do not screen items based on referral eligibility.</i></p>
+<hr>
 {% endblock content %}

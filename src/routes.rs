@@ -1,16 +1,17 @@
 extern crate diesel;
+extern crate nanoid;
 extern crate r2d2;
 extern crate rocket;
 extern crate rocket_contrib;
 extern crate tera;
-extern crate nanoid;
+use chrono::{NaiveDate, Utc};
 use diesel::pg::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
-use chrono::{NaiveDate, Utc};
-use rand::Rng;
+use rand::{Rng, thread_rng};
+use rocket::response::status::NotFound;
 use rocket::http::Status;
-use rocket::request::{Form,FromRequest, FromForm};
 use rocket::request;
+use rocket::request::{Form, FromForm, FromRequest};
 use rocket::response::NamedFile;
 use rocket::response::Redirect;
 use rocket::{Outcome, Request, State};
@@ -19,13 +20,13 @@ use std::iter;
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use tera::Context;
-
+use strsim::normalized_damerau_levenshtein;
 use diesel::prelude::*;
-use model::field::{Field};
-use model::product::{Product};
-use model::submission::{NewSubmission};
+use mail::{Mailer, NewSubmissionEmail};
+use model::field::Field;
+use model::product::Product;
+use model::submission::NewSubmission;
 use schema::*;
-use mail::{NewSubmissionEmail, Mailer};
 
 #[derive(FromForm)]
 struct UserSubmission {
@@ -37,6 +38,11 @@ struct UserSubmission {
     author: String,
     category: String,
     message: String,
+}
+
+#[derive(FromForm)]
+struct SearchQuery{
+   pub field: String
 }
 
 type PgPool = Pool<ConnectionManager<PgConnection>>;
@@ -68,8 +74,20 @@ impl Deref for DbConn {
 }
 
 #[get("/")]
-fn index() -> rocket_contrib::Template {
-    return Template::render("index", Context::new());
+fn index(conn: DbConn) -> Result<Template, NotFound<String>> {
+    let mut context = Context::new();
+    let mut result = Field::all(conn);
+    let empty : Vec<Field> = Vec::new();
+    let mut subjs;
+    match result {
+        Some(subjects) => subjs = subjects,
+        None => subjs = empty
+    }
+    let mut rng = thread_rng();
+    rng.shuffle(&mut subjs);
+    subjs.truncate(12);
+    context.add("subjects", &subjs);
+    return Ok(Template::render("index", context));
 }
 
 #[get("/<file..>")]
@@ -78,50 +96,88 @@ fn files(file: PathBuf) -> Option<NamedFile> {
 }
 
 #[get("/item/<slug>")]
-fn get_item(slug: String, conn: DbConn) -> rocket_contrib::Template {
+fn get_item(slug: String, conn: DbConn) -> Result<Template, NotFound<String>> {
     let conn = &*conn;
     let mut context = Context::new();
-    let mut result = products::dsl::products
+    let result = products::dsl::products
         .filter(products::dsl::slug.eq(slug))
-        .first::<Product>(conn)
-        .expect("Issue loading products");
-    result.description = result.description.replace('\n', "<br>");
-    context.add("product", &result);
-    return Template::render("item", &context);
+        .first::<Product>(conn);
+    let res;
+    match result {
+        Ok(r) => res = Product{description: r.description.replace('\n', "<br>"), .. r},
+        Err(x) => return Err(NotFound(format!("There was an error accessing the database. Trace: {:?}", x)))
+    }
+    context.add("product", &res);
+    return Ok(Template::render("item", &context));
 }
 
 #[post(
     "/learn",
     format = "application/x-www-form-urlencoded",
-    data = "<category>"
+    data = "<sq>"
 )]
-fn search_submit(category: String) -> Redirect {
-    let mut splitter = category.splitn(2, '=');
-    splitter.next();
-    let second = splitter.next().unwrap();
-    let result = format!("/learn/{}", second.to_lowercase());
-    return Redirect::to(&result);
+fn search_submit(sq: Form<SearchQuery>, conn: DbConn) -> Result<Redirect, NotFound<String>> {
+    let search_query = sq.get();
+    let f_opt = Field::all(conn);
+    let fields;
+    match f_opt {
+        Some(f) => fields = f,
+        None => return Err(NotFound("Unable to connect to the database.".to_string()))
+    }
+    
+    let mut best_score = -0.1;
+    let mut best_field: Option<Field> = None;
+    for field in fields {
+        let score = normalized_damerau_levenshtein(&field.name, &search_query.field);
+        if(score > best_score) {
+            best_field = Some(field.clone());
+            best_score = score;
+        }
+        for synonym in field.clone().synonyms {
+            let syn_score = normalized_damerau_levenshtein(&synonym, &search_query.field);
+            if (syn_score > best_score) {
+                best_field = Some(field.clone());
+                best_score = score;
+            }
+        }
+        if score == 1.0 {
+            break;
+        }
+    }
+    let result;
+    match best_field {
+        Some(field) => result = format!("/learn/{}", field.name.to_lowercase()),
+        None => return Err(NotFound("No such subject found.".to_string()))
+    }
+    if best_score < 0.7 {
+        return Err(NotFound("No confidence regarding subject matches.".to_string()));
+    }
+    return Ok(Redirect::to(&result));
 }
 
 #[get("/learn/<category>")]
-fn get_category(category: String, conn: DbConn) -> rocket_contrib::Template {
+fn get_category(category: String, conn: DbConn) -> Result<Template, NotFound<String>> {
     let mut context = Context::new();
     let conn = &*conn;
     use schema::fields::dsl::*;
     let field = fields.filter(name.eq(&category)).first::<Field>(conn);
     let res;
     match field {
-        Err(_) => return Template::render("index", Context::new()),
+        Err(_) => return Err(NotFound(format!("Unable to locate field with that name."))),
         Ok(f) => res = f,
     }
-    let resources = products::dsl::products
+    let r = products::dsl::products
         .filter(products::dsl::field_id.eq(res.id))
-        .load::<Product>(conn)
-        .expect("Issue loading products");
+        .load::<Product>(conn);
+    let resources;
+    match r {
+        Ok(result) => resources = result,
+        Err(_) => return Err(NotFound("Couldn't find any resources".to_string()))
+    }
     context.add("title", &category);
     context.add("field", &res);
     context.add("resources", &resources);
-    return Template::render("category", &context);
+    return Ok(Template::render("category", &context));
 }
 
 #[post(
@@ -130,8 +186,9 @@ fn get_category(category: String, conn: DbConn) -> rocket_contrib::Template {
     format = "application/x-www-form-urlencoded"
 )]
 fn submit(i: Form<UserSubmission>, conn: DbConn) -> rocket::response::Redirect {
-    let alphabet: [char; 20] = [
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','m', 'k'
+    let alphabet: [char; 29] = [
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'm', 'k', 'n', 'p', 'q', 'r','s','v','w','x','z'
     ];
     let reference_code = nanoid::custom(6, &alphabet).to_uppercase();
     let input = i.get();
@@ -146,16 +203,19 @@ fn submit(i: Form<UserSubmission>, conn: DbConn) -> rocket::response::Redirect {
         category: input.category.clone(),
         message: input.message.clone(),
         created_at: Utc::now().naive_utc().date(),
-        updated_at: Utc::now().naive_utc().date()
+        updated_at: Utc::now().naive_utc().date(),
     };
     let opt_sub = new_sub.save(conn);
     match opt_sub {
         Some(sub) => {
-            let email = NewSubmissionEmail{identifier:reference_code, submission: sub};
+            let email = NewSubmissionEmail {
+                identifier: reference_code,
+                submission: sub,
+            };
             email.send();
             return Redirect::to("/thank_you");
-        },
-        None => return Redirect::to("/error")
+        }
+        None => return Redirect::to("/error"),
     }
 }
 
