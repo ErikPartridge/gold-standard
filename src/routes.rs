@@ -161,7 +161,7 @@ fn get_category(category: String, conn: DbConn) -> Result<Template, NotFound<Str
     let mut context = Context::new();
     let conn = &*conn;
     use schema::fields::dsl::*;
-    let field = fields.filter(name.eq(&category)).first::<Field>(conn);
+    let field = fields.filter(slug.eq(&category)).first::<Field>(conn);
     let res;
     match field {
         Err(_) => return Err(NotFound(format!("Unable to locate field with that name."))),
@@ -175,7 +175,7 @@ fn get_category(category: String, conn: DbConn) -> Result<Template, NotFound<Str
         Ok(result) => resources = result,
         Err(_) => return Err(NotFound("Couldn't find any resources".to_string()))
     }
-    context.insert("title", &category);
+    context.insert("title", &field.name);
     context.insert("field", &res);
     context.insert("resources", &resources);
     return Ok(Template::render("category", &context));
