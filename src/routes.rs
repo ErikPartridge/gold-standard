@@ -147,7 +147,7 @@ fn search_submit(sq: Form<SearchQuery>, conn: DbConn) -> Result<Redirect, NotFou
     }
     let result;
     match best_field {
-        Some(field) => result = format!("/learn/{}", utf8_percent_encode(&field.name, DEFAULT_ENCODE_SET).to_string()),
+        Some(field) => result = format!("/learn/{}", &field.slug),
         None => return Err(NotFound("No such subject found.".to_string()))
     }
     if best_score < 0.7 {
