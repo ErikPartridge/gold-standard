@@ -5,7 +5,7 @@ table! {
         synonyms -> Array<Text>,
         created_at -> Date,
         updated_at -> Date,
-        slug -> Nullable<Varchar>,
+        slug -> Varchar,
     }
 }
 

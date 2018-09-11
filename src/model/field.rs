@@ -18,7 +18,7 @@ pub struct Field {
     pub synonyms: Vec<String>,
     pub created_at: NaiveDate,
     pub updated_at: NaiveDate,
-    pub slug: Option<String>,
+    pub slug: String,
 }
 
 impl Field {
