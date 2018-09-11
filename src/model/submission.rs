@@ -40,23 +40,6 @@ pub struct NewSubmission {
     pub updated_at: chrono::NaiveDate,
 }
 
-impl Submission {
-    /*fn save(&self, conn: DbConn) -> Option<Submission> {
-        let date = Utc::now().naive_utc().date();
-        let updated = Submission {
-            updated_at: date,
-            ..self.clone()
-        };
-        let res = diesel::update(submissions::table)
-            .set(&updated)
-            .get_result::<Submission>(&*conn);
-        match res {
-            Ok(x) => return Some(x),
-            _ => return None,
-        }
-    }*/
-}
-
 impl NewSubmission {
     pub fn save(&self, conn: DbConn) -> Option<Submission> {
         let res = diesel::insert_into(submissions::dsl::submissions)

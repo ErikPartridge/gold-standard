@@ -4,7 +4,9 @@ extern crate r2d2;
 extern crate rocket;
 extern crate rocket_contrib;
 extern crate tera;
-use chrono::{NaiveDate, Utc};
+extern crate percent_encoding;
+use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
+use chrono::{Utc};
 use diesel::pg::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
 use rand::{Rng, thread_rng};
@@ -16,7 +18,6 @@ use rocket::response::NamedFile;
 use rocket::response::Redirect;
 use rocket::{Outcome, Request, State};
 use rocket_contrib::Template;
-use std::iter;
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use tera::Context;
@@ -76,7 +77,7 @@ impl Deref for DbConn {
 #[get("/")]
 fn index(conn: DbConn) -> Result<Template, NotFound<String>> {
     let mut context = Context::new();
-    let mut result = Field::all(conn);
+    let result = Field::all(conn);
     let empty : Vec<Field> = Vec::new();
     let mut subjs;
     match result {
@@ -86,7 +87,7 @@ fn index(conn: DbConn) -> Result<Template, NotFound<String>> {
     let mut rng = thread_rng();
     rng.shuffle(&mut subjs);
     subjs.truncate(12);
-    context.add("subjects", &subjs);
+    context.insert("subjects", &subjs);
     return Ok(Template::render("index", context));
 }
 
@@ -107,7 +108,7 @@ fn get_item(slug: String, conn: DbConn) -> Result<Template, NotFound<String>> {
         Ok(r) => res = Product{description: r.description.replace('\n', "<br>"), .. r},
         Err(x) => return Err(NotFound(format!("There was an error accessing the database. Trace: {:?}", x)))
     }
-    context.add("product", &res);
+    context.insert("product", &res);
     return Ok(Template::render("item", &context));
 }
 
@@ -129,13 +130,13 @@ fn search_submit(sq: Form<SearchQuery>, conn: DbConn) -> Result<Redirect, NotFou
     let mut best_field: Option<Field> = None;
     for field in fields {
         let score = normalized_damerau_levenshtein(&field.name, &search_query.field);
-        if(score > best_score) {
+        if score > best_score {
             best_field = Some(field.clone());
             best_score = score;
         }
         for synonym in field.clone().synonyms {
             let syn_score = normalized_damerau_levenshtein(&synonym, &search_query.field);
-            if (syn_score > best_score) {
+            if syn_score > best_score {
                 best_field = Some(field.clone());
                 best_score = score;
             }
@@ -146,7 +147,7 @@ fn search_submit(sq: Form<SearchQuery>, conn: DbConn) -> Result<Redirect, NotFou
     }
     let result;
     match best_field {
-        Some(field) => result = format!("/learn/{}", field.name.to_lowercase()),
+        Some(field) => result = format!("/learn/{}", utf8_percent_encode(&field.name, DEFAULT_ENCODE_SET).to_string()),
         None => return Err(NotFound("No such subject found.".to_string()))
     }
     if best_score < 0.7 {
@@ -174,9 +175,9 @@ fn get_category(category: String, conn: DbConn) -> Result<Template, NotFound<Str
         Ok(result) => resources = result,
         Err(_) => return Err(NotFound("Couldn't find any resources".to_string()))
     }
-    context.add("title", &category);
-    context.add("field", &res);
-    context.add("resources", &resources);
+    context.insert("title", &category);
+    context.insert("field", &res);
+    context.insert("resources", &resources);
     return Ok(Template::render("category", &context));
 }
 
@@ -233,3 +234,8 @@ fn thank_you() -> rocket_contrib::Template {
 fn about() -> rocket_contrib::Template {
     return Template::render("about", Context::new());
 }
+
+#[catch(404)]
+fn not_found() -> rocket_contrib::Template {
+    return Template::render("not_found", Context::new());
+ }

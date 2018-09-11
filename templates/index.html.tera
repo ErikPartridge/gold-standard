@@ -27,7 +27,7 @@
 <hr>
 <h4 class="subtitle is-4">Trending Subjects</h4>
 {% for subject in subjects %}
-  <p>- <a href="/learn/{{subject.name | urlencode}}">{{subject.name}}</a></p>
+  <p>- <a href="/learn/{{subject.slug | urlencode)}}">{{subject.name}}</a></p>
 {% endfor %}
 <br>
 <p>Have feedback on the site? I'd love to hear it. Please ping me anywhere on social media, via <a href="mailto:erik@erikpartridge.com">email</a> or as <a href="https://github.com/ErikPartridge/fundamentals">an issue on the GitHub Repository</a> for the web app.</p>

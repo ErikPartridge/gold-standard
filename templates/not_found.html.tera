@@ -1,0 +1,6 @@
+{% extends "base" %}
+
+{% block content %}
+<h1 class="title is-1 has-text-centered">404</h1>
+<p>Yikes, we couldn't find anything at that URL. We've noted this occurence, and we'll do our best to tackle it. Until then, do you mind clicking the "Back" button, or selecting an option from the menu above? Thanks!</p><br><br>
+{% endblock content %}

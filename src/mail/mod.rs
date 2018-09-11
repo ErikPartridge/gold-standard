@@ -44,7 +44,7 @@ pub struct NewSubmissionEmail {
 
 impl Mailer for NewSubmissionEmail {
     fn build(&self) -> EmailBuilder {
-        let subject = format!("Submission: # {}", self.identifier);
+        let subject = format!("Submission: #{}", self.identifier);
         let contents = format!(
             "Hey Erik,\n\n There's a new submission online:\n {:?}",
             self.submission

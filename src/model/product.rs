@@ -52,32 +52,3 @@ pub struct NewProduct {
     pub flags: Vec<String>,
     pub field_id: Option<i32>,
 }
-
-impl Product {
-    /*fn save(&self, conn: DbConn) -> Option<Product> {
-        let date = Utc::now().naive_utc().date();
-        let updated = Product {
-            updated_at: date,
-            ..self.clone()
-        };
-        let res = diesel::update(products::table)
-            .set(&updated)
-            .get_result::<Product>(&*conn);
-        match res {
-            Ok(x) => return Some(x),
-            _ => return None,
-        }
-    }*/
-}
-
-impl NewProduct {
-    fn save(&self, conn: DbConn) -> Option<Product> {
-        let res = diesel::insert_into(products::dsl::products)
-            .values(self)
-            .get_result::<Product>(&*conn);
-        match res {
-            Ok(product) => Some(product),
-            Err(_) => None,
-        }
-    }
-}

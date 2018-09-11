@@ -11,6 +11,7 @@ extern crate rocket;
 extern crate serde;
 extern crate tera;
 extern crate strsim;
+extern crate percent_encoding;
 
 
 #[macro_use]
@@ -29,6 +30,8 @@ mod routes;
 use rocket::http::Status;
 use rocket::request::{self, FromRequest};
 use rocket::{Outcome, Request, State};
+use rocket::fairing::AdHoc;
+use rocket::http::Header;
 use std::ops::Deref;
 mod mail;
 mod schema;
@@ -85,6 +88,17 @@ fn main() {
             ],
         ).mount("/cdn", routes![routes::files])
         .attach(Template::fairing())
+        .attach(AdHoc::on_response(|_, res| {
+            let xframe = Header::new("X-Frame-Options".to_string(), "DENY".to_string());
+            let cors = Header::new("Cross-Origin-Resource-Policy".to_string(), "no-cors".to_string());
+            let content_lang = Header::new("Content-Language".to_string(), "en-US".to_string());
+            let referrer = Header::new("Referrer-Policy".to_string(), "no-referrer".to_string());
+            res.set_header(xframe);
+            res.set_header(cors);
+            res.set_header(referrer);
+            res.set_header(content_lang);
+        }))
+        .catch(catchers![routes::not_found])
         .manage(init_pool())
         .launch();
 }
