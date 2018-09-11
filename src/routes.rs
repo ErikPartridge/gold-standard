@@ -175,7 +175,7 @@ fn get_category(category: String, conn: DbConn) -> Result<Template, NotFound<Str
         Ok(result) => resources = result,
         Err(_) => return Err(NotFound("Couldn't find any resources".to_string()))
     }
-    context.insert("title", &field.name);
+    context.insert("title", &res.name);
     context.insert("field", &res);
     context.insert("resources", &resources);
     return Ok(Template::render("category", &context));
