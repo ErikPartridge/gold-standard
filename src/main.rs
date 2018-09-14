@@ -84,7 +84,8 @@ fn main() {
                 routes::search_submit,
                 routes::get_category,
                 routes::get_item,
-                routes::index
+                routes::index,
+                routes::privacy
             ],
         ).mount("/cdn", routes![routes::files])
         .attach(Template::fairing())

@@ -1,0 +1,20 @@
+{% extends "base" %}
+
+{% block content %}
+<h1 class="title is-1">Privacy</h1>
+<p>This site, <a href="https://fundamentalsofanything.com">FundamentalsofAnything.com</a> is maintained by Erik Partridge in Montréal, Québec, Canada. Our web hosting is also Canadian based.</p>
+<br><h3 class="title is-3">Data collected</h3>
+<p>While you use the site, we may collect certain data about you. Some of this may be personal information, such as your name, email address, or IP address. When you make a submission or comment regarding one of our articles, we may share this information on our mailing list in order to determine if you are a credible source, and if to approve your submission. We may also publish your name on the website in order to properly attribute you.</p>
+<br><h3 class="title is-3">Google Analytics</h3>
+<p>On this site, I use Google Analytics to get a sense of who is using the site. This tracks your IP address, and shares with us certain information such as demographic data including age and interests. The Google Analytics terms specify that no personally identifiable information may be collected through the Google Analytics software. This data is not shared with any other third party by us. Google may share this data with other Google services. It may use the collected data to contextualize and personalize the ads of its own advertising network. </p>
+<br><h3 class="title is-3">Amazon Associates</h3>
+<p>This site, managed by Erik Partridge, is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to <a href="https://amazon.com">Amazon.com</a>.</p>
+<br><h3 class="title is-3">Cookies</h3>
+<p>I use cookies to track your browsing on the site to better improve the site experience, and I further may provide an essential cookie to prevent Cross-Site Request Forgery attacks.</p>
+<br><h3 class="title is-3">Grounds for using your data</h3>
+<p>I use your data to provide information to you about Fundamentals of Anything, such as if you sign up for a mailing list or make a submission. You may opt out of any promotional emails at anytime. I may also use your data to meet contractual obligations to you regarding submissions and attributions.</p>
+<br><h3 class="title is-3">Deletion of data</h3>
+<p>To gain a copy of, or to delete your data please contact <a href="mailto:erik@erikpartridge.com">me</a>. I will respond within one month with my best attempt to provide a copy of, edit, or deletion of your data.</p>
+
+<br>
+{% endblock content %}

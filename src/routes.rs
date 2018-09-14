@@ -235,6 +235,11 @@ fn about() -> rocket_contrib::Template {
     return Template::render("about", Context::new());
 }
 
+#[get("/privacy")]
+fn privacy() -> rocket_contrib::Template {
+    return Template::render("privacy", Context::new());
+}
+
 #[catch(404)]
 fn not_found() -> rocket_contrib::Template {
     return Template::render("not_found", Context::new());
