@@ -3,6 +3,10 @@ name = "fundamentals"
 version = "0.1.0"
 authors = ["Erik A. Partridge <erik.partridge@mail.mcgill.ca>"]
 
+[global.tls]
+certs="server.crt"
+key="server.key"
+
 [dependencies]
 rocket = {version = "0.3", features = ["tls"]}
 rocket_codegen = "0.3"
